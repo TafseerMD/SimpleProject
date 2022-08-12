@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Models.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="documents">
+          <Key>
+            <PropertyRef Name="docsId" />
+          </Key>
+          <Property Name="docsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DocsType" Type="varchar" MaxLength="50" />
+          <Property Name="DocsPath" Type="varchar(max)" />
+          <Property Name="ImgType" Type="varchar" MaxLength="50" />
+          <Property Name="ImgPath" Type="varchar(max)" />
+          <Property Name="userId" Type="int" />
+        </EntityType>
+        <EntityType Name="mvc_tb">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar(max)" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="MobNum" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_documents_mvc_tb">
+          <End Role="mvc_tb" Type="Self.mvc_tb" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="documents" Type="Self.documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mvc_tb">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="documents">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelsStoreContainer">
+          <EntitySet Name="documents" EntityType="Self.documents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mvc_tb" EntityType="Self.mvc_tb" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_documents_mvc_tb" Association="Self.FK_documents_mvc_tb">
+            <End Role="mvc_tb" EntitySet="mvc_tb" />
+            <End Role="documents" EntitySet="documents" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Models" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityType Name="mvc_tb">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MobNum" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="documents" Relationship="Models.FK_documents_mvc_tb" FromRole="mvc_tb" ToRole="document" />
+          </EntityType>
+        <EntityContainer Name="mvc_dbContext" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+          <EntitySet Name="mvc_tb" EntityType="Self.mvc_tb" />
+          <EntitySet Name="sysdiagrams" EntityType="Models.sysdiagram" />
+          <EntitySet Name="documents" EntityType="Models.document" />
+          <AssociationSet Name="FK_documents_mvc_tb" Association="Models.FK_documents_mvc_tb">
+            <End Role="mvc_tb" EntitySet="mvc_tb" />
+            <End Role="document" EntitySet="documents" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="document">
+          <Key>
+            <PropertyRef Name="docsId" />
+          </Key>
+          <Property Name="docsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocsType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DocsPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="userId" Type="Int32" />
+          <NavigationProperty Name="mvc_tb" Relationship="Models.FK_documents_mvc_tb" FromRole="document" ToRole="mvc_tb" />
+          <Property Name="ImgType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ImgPath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_documents_mvc_tb">
+          <End Type="Models.mvc_tb" Role="mvc_tb" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Models.document" Role="document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mvc_tb">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="document">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelsStoreContainer" CdmEntityContainer="mvc_dbContext">
+    <EntitySetMapping Name="mvc_tb">
+      <EntityTypeMapping TypeName="IsTypeOf(Models.mvc_tb)">
+        <MappingFragment StoreEntitySet="mvc_tb">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="MobNum" ColumnName="MobNum" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="IsTypeOf(Models.sysdiagram)">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+          <EntitySetMapping Name="documents">
+            <EntityTypeMapping TypeName="Models.document">
+              <MappingFragment StoreEntitySet="documents">
+                <ScalarProperty Name="ImgPath" ColumnName="ImgPath" />
+                <ScalarProperty Name="ImgType" ColumnName="ImgType" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="DocsPath" ColumnName="DocsPath" />
+                <ScalarProperty Name="DocsType" ColumnName="DocsType" />
+                <ScalarProperty Name="docsId" ColumnName="docsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer>
+    <edmx:Connection>
+      <edmx:DesignerInfoPropertySet>
+        <edmx:DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </edmx:DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <edmx:DesignerInfoPropertySet>
+        <edmx:DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <edmx:DesignerProperty Name="EnablePluralization" Value="true" />
+        <edmx:DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <edmx:DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <edmx:DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </edmx:DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams />
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,124 @@
+﻿<!-- Declare model data type -->
+@model SimpleProject.Models.UserModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+        <div class="jumbotron" style="padding-top:10px; padding-bottom:10px">
+            <h2 style="color:darkblue"><b>Edit User</b></h2>
+        </div>
+        <div class="form-horizontal">
+            <hr />
+            <div class="col-md-6">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(model => model.Title, new SelectList(ViewBag.Titles), Model.Title, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MobNum, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.MobNum, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MobNum, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DocsPath, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.DocsFile, htmlAttributes: new { type = "file", @multiple = "multiple", @class = "form-control", @name = "fileToView" })
+                        @Html.ValidationMessageFor(model => model.DocsFile, "", new { @class = "text-danger" })
+                        @*<input type="file" name="DocsFile" class="form-control" />*@
+                        @*<input type="submit" value="Preview" class="btn btn-default" />*@
+                        @*<a href="@Url.Action("ViewDocument", "User")" method="Post">Preview</a>*@
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImgPath, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.ImgFile, htmlAttributes: new { type = "file", @class = "form-control", @id = "imageInput" })
+                        @Html.ValidationMessageFor(model => model.ImgFile, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-10">
+                        <span style="padding-right:27px;">
+                            <input type="button" value="Cancel" class="btn btn-danger" onclick="location.href='@Url.Action("Index","User")'" />
+                        </span>
+                        <span>
+                            <input type="submit" value="Save" class="btn btn-success" />
+                        </span>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            @*//IMAGE VIEWER\\*@
+            <div>
+                <div class="col-md-3" id="displayImage" style="width:400px;height:400px;border:1px solid black;background-position:center;background-size:cover;">
+                </div>
+            </div>  
+        </div>
+}
+@section Scripts{
+    <script>
+        // display profile image //
+        const imageInput = document.querySelector("#imageInput");
+        var uploaded_Image = "";
+        imageInput.addEventListener("change", function () {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => {
+                uploaded_Image = reader.result;
+                document.querySelector("#displayImage").style.backgroundImage = `url(${uploaded_Image})`;
+            })
+            reader.readAsDataURL(this.files[0]);
+        }), function () {
+            $.ajax({
+                url: "/User/Index",
+                type: "POST"
+            })
+        }
+        //---------------------------------//
+    </script>
+}
